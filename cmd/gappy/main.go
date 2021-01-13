@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/ecshreve/gappy/internal/game"
+)
 
 func main() {
-	fmt.Println("hello world")
+	game.DoSomethig()
 }
