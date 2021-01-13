@@ -13,12 +13,8 @@ func main() {
 
 	g := &game.Game{
 		Obstacles: []*game.Obs{o1},
+		Bird:      &game.Birdy{PosY: 6},
 	}
 
-	g.PrintCurrentGame()
-	g.GenNewObs()
-	g.Tick()
-	g.Tick()
-	g.Tick()
-	g.PrintCurrentGame()
+	g.RunTheGame()
 }

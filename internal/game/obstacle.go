@@ -16,12 +16,12 @@ type Obs struct {
 
 func (g *Game) GenNewObs() {
 	for _, o := range g.Obstacles {
-		if GameW-o.CurXMax < 5 {
+		if GameW-o.CurXMax < 10 {
 			return
 		}
 	}
 
-	gapS := rand.Intn(GameH)
+	gapS := rand.Intn(GameH-6) + 3
 	o := &Obs{
 		GapStart: gapS,
 		CurXMin:  GameW,

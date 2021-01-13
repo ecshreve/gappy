@@ -1,9 +1,16 @@
 package game
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
-func RunTheGame() {
-	PrintInitialGame()
+func (g *Game) RunTheGame() {
+	for i := 0; i < 100; i++ {
+		g.PrintCurrentGame()
+		time.Sleep(time.Second)
+		g.Tick()
+	}
 }
 
 const (
@@ -19,22 +26,9 @@ func PrintYBorder() {
 	fmt.Println("+")
 }
 
-func PrintInitialGame() {
-	PrintYBorder()
-
-	for i := 0; i < GameH; i++ {
-		fmt.Print("|")
-		for j := 0; j < GameW; j++ {
-			fmt.Print(" ")
-		}
-		fmt.Println("|")
-	}
-
-	PrintYBorder()
-}
-
 type Game struct {
 	Obstacles []*Obs
+	Bird      *Birdy
 }
 
 func (g *Game) PrintCurrentGame() {
@@ -42,17 +36,26 @@ func (g *Game) PrintCurrentGame() {
 	for i := 0; i < GameH; i++ {
 		fmt.Print("|")
 		for j := 0; j < GameW; j++ {
+			isBird := false
+			if i == g.Bird.PosY && j == 5 {
+				fmt.Print("*")
+				isBird = true
+			}
 			isObstacle := false
 			for _, o := range g.Obstacles {
 				if j > o.CurXMin && j < o.CurXMax {
 					if i < o.GapStart || i > o.GapStart+2 {
+						if isBird {
+							fmt.Println("YOU LOSE")
+							return
+						}
 						fmt.Print("#")
 						isObstacle = true
 						break
 					}
 				}
 			}
-			if !isObstacle {
+			if !isObstacle && !isBird {
 				fmt.Print(" ")
 			}
 		}
