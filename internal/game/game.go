@@ -2,10 +2,62 @@ package game
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 
 	"github.com/samsarahq/go/oops"
 )
+
+const (
+	GameW = 60
+	GameH = 12
+)
+
+type Game struct {
+	Obstacles []*Obs
+	Bird      *Birdy
+	Score     int
+}
+
+func NewGame() *Game {
+	g := &Game{
+		Bird: &Birdy{PosY: 6},
+	}
+	g.GenNewObs()
+	return g
+}
+
+type Birdy struct {
+	PosY int
+}
+
+func (g *Game) JumpBird() {
+	g.Score++
+	g.Bird.PosY -= 3
+}
+
+type Obs struct {
+	GapStart int
+	CurXMin  int
+	CurXMax  int
+}
+
+func (g *Game) GenNewObs() {
+	for _, o := range g.Obstacles {
+		if GameW-o.CurXMax < 10 {
+			return
+		}
+	}
+
+	gapS := rand.Intn(GameH-6) + 3
+	o := &Obs{
+		GapStart: gapS,
+		CurXMin:  GameW,
+		CurXMax:  GameW + 5,
+	}
+
+	g.Obstacles = append(g.Obstacles, o)
+}
 
 func (g *Game) RunTheGame() {
 	for i := 0; i < 100; i++ {
@@ -16,16 +68,9 @@ func (g *Game) RunTheGame() {
 			panic(err)
 		}
 		time.Sleep(time.Second / 4)
-		if err := g.Tick(); err != nil {
-			panic(err)
-		}
+		g.Tick()
 	}
 }
-
-const (
-	GameW = 60
-	GameH = 12
-)
 
 func PrintYBorder() {
 	fmt.Print("+")
@@ -33,12 +78,6 @@ func PrintYBorder() {
 		fmt.Print("-")
 	}
 	fmt.Println("+")
-}
-
-type Game struct {
-	Obstacles []*Obs
-	Bird      *Birdy
-	Score     int
 }
 
 func (g *Game) PrintCurrentGame() error {
@@ -76,16 +115,11 @@ func (g *Game) PrintCurrentGame() error {
 	return nil
 }
 
-func (g *Game) Tick() error {
+func (g *Game) Tick() {
 	for _, o := range g.Obstacles {
-		if o.CurXMin == 0 {
-			o.CurXMax -= 1
-		}
-
 		o.CurXMin--
-		o.CurXMax = o.CurXMin + ObsW
+		o.CurXMax = o.CurXMin + 5
 	}
 	g.GenNewObs()
 	g.Bird.PosY++
-	return nil
 }
