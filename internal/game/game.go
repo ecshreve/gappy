@@ -11,12 +11,16 @@ const (
 	GameH = 12
 )
 
-func PrintInitialGame() {
+func PrintYBorder() {
 	fmt.Print("+")
 	for i := 0; i < GameW; i++ {
 		fmt.Print("-")
 	}
 	fmt.Println("+")
+}
+
+func PrintInitialGame() {
+	PrintYBorder()
 
 	for i := 0; i < GameH; i++ {
 		fmt.Print("|")
@@ -26,9 +30,34 @@ func PrintInitialGame() {
 		fmt.Println("|")
 	}
 
-	fmt.Print("+")
-	for i := 0; i < GameW; i++ {
-		fmt.Print("-")
+	PrintYBorder()
+}
+
+type Game struct {
+	Obstacles []*Obs
+}
+
+func (g *Game) PrintCurrentGame() {
+	PrintYBorder()
+	for i := 0; i < GameH; i++ {
+		fmt.Print("|")
+		for j := 0; j < GameW; j++ {
+			isObstacle := false
+			for _, o := range g.Obstacles {
+				if j > o.CurXMin && j < o.CurXMax {
+					if i < o.GapStart || i > o.GapStart+2 {
+						fmt.Print("#")
+						isObstacle = true
+						break
+					}
+				}
+			}
+			if !isObstacle {
+				fmt.Print(" ")
+			}
+		}
+		fmt.Println("|")
 	}
-	fmt.Println("+")
+
+	PrintYBorder()
 }
