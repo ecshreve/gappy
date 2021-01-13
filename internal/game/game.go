@@ -9,11 +9,16 @@ import (
 
 func (g *Game) RunTheGame() {
 	for i := 0; i < 100; i++ {
+		if g.Bird.PosY <= 0 || g.Bird.PosY >= GameH {
+			panic(oops.Errorf("get rekt"))
+		}
 		if err := g.PrintCurrentGame(); err != nil {
 			panic(err)
 		}
 		time.Sleep(time.Second / 4)
-		g.Tick()
+		if err := g.Tick(); err != nil {
+			panic(err)
+		}
 	}
 }
 
@@ -33,9 +38,11 @@ func PrintYBorder() {
 type Game struct {
 	Obstacles []*Obs
 	Bird      *Birdy
+	Score     int
 }
 
 func (g *Game) PrintCurrentGame() error {
+	fmt.Printf("Score: %d\n", g.Score)
 	PrintYBorder()
 	for i := 0; i < GameH; i++ {
 		fmt.Print("|")
@@ -69,7 +76,7 @@ func (g *Game) PrintCurrentGame() error {
 	return nil
 }
 
-func (g *Game) Tick() {
+func (g *Game) Tick() error {
 	for _, o := range g.Obstacles {
 		if o.CurXMin == 0 {
 			o.CurXMax -= 1
@@ -80,4 +87,5 @@ func (g *Game) Tick() {
 	}
 	g.GenNewObs()
 	g.Bird.PosY++
+	return nil
 }

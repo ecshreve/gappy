@@ -39,6 +39,7 @@ func main() {
 			case term.KeyEsc:
 				break
 			case term.KeySpace:
+				g.Score++
 				g.Bird.Jump()
 			default:
 				// we only want to read a single character or one key pressed event
