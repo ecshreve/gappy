@@ -3,12 +3,16 @@ package game
 import (
 	"fmt"
 	"time"
+
+	"github.com/samsarahq/go/oops"
 )
 
 func (g *Game) RunTheGame() {
 	for i := 0; i < 100; i++ {
-		g.PrintCurrentGame()
-		time.Sleep(time.Second)
+		if err := g.PrintCurrentGame(); err != nil {
+			panic(err)
+		}
+		time.Sleep(time.Second / 4)
 		g.Tick()
 	}
 }
@@ -31,7 +35,7 @@ type Game struct {
 	Bird      *Birdy
 }
 
-func (g *Game) PrintCurrentGame() {
+func (g *Game) PrintCurrentGame() error {
 	PrintYBorder()
 	for i := 0; i < GameH; i++ {
 		fmt.Print("|")
@@ -46,8 +50,7 @@ func (g *Game) PrintCurrentGame() {
 				if j > o.CurXMin && j < o.CurXMax {
 					if i < o.GapStart || i > o.GapStart+2 {
 						if isBird {
-							fmt.Println("YOU LOSE")
-							return
+							return oops.Errorf("YOU LOSE")
 						}
 						fmt.Print("#")
 						isObstacle = true
@@ -63,6 +66,7 @@ func (g *Game) PrintCurrentGame() {
 	}
 
 	PrintYBorder()
+	return nil
 }
 
 func (g *Game) Tick() {
@@ -75,4 +79,5 @@ func (g *Game) Tick() {
 		o.CurXMax = o.CurXMin + ObsW
 	}
 	g.GenNewObs()
+	g.Bird.PosY++
 }
