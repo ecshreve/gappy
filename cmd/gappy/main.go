@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	game.DoSomethig()
+	game.RunTheGame()
 }
