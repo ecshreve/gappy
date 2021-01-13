@@ -6,8 +6,8 @@ import (
 
 func main() {
 	o1 := &game.Obs{
-		CurXMin:  3,
-		CurXMax:  8,
+		CurXMin:  40,
+		CurXMax:  45,
 		GapStart: 7,
 	}
 
@@ -15,5 +15,10 @@ func main() {
 		Obstacles: []*game.Obs{o1},
 	}
 
+	g.PrintCurrentGame()
+	g.GenNewObs()
+	g.Tick()
+	g.Tick()
+	g.Tick()
 	g.PrintCurrentGame()
 }

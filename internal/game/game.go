@@ -61,3 +61,15 @@ func (g *Game) PrintCurrentGame() {
 
 	PrintYBorder()
 }
+
+func (g *Game) Tick() {
+	for _, o := range g.Obstacles {
+		if o.CurXMin == 0 {
+			o.CurXMax -= 1
+		}
+
+		o.CurXMin--
+		o.CurXMax = o.CurXMin + ObsW
+	}
+	g.GenNewObs()
+}
